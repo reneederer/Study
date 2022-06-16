@@ -3,7 +3,6 @@ namespace Lectures
 open Browser
 open Components
 open Fable.React
-open Fable.Formatting.Markdown.Dsl
 open Fable.Formatting.Markdown
 
 
@@ -20,10 +19,10 @@ module _20220212_LinearAlgebra1 =
     let Lecture() =
         let markdown = """
 <!--
-title: Markdown Content
-category: Examples
-categoryindex: 2
-index: 2
+title: Lecture 3
+tags: Linear Algebra
+menu: Semester 1 > Mathematics > Linear Algebra
+date: 2022-07-01
 -->
 # Example: Using Markdown Content
 
@@ -58,7 +57,7 @@ $ a^2 + b^2 = c^2 $
 >
 > $ a^3 + b^2 = c^2 $
 
-(hallo)[http://www.google.de]
+[hallo](http://www.google.de)
 
 | Zelle A      |         Zelle B |
 |---------|---------|

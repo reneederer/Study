@@ -9,13 +9,14 @@ open Lectures
 
 
 type Model =
-    { Lectures : (unit -> ReactElement) list
-      CurrentLecture : int option
+    { CurrentLecture : Lecture option
+      Menu : string list list
     }
 
 type Msg =
-    | GetLectures
-    | GotLectures of unit
+    | GetLecture of string
+    | GotLecture of Lecture
+    | GotAllLectureMetaData of LectureMetaData list
 
 let api =
     Remoting.createApi ()
@@ -24,21 +25,25 @@ let api =
 
 let init () : Model * Cmd<Msg> =
     let model =
-        { Lectures = [ _20220212_LinearAlgebra1.Lecture; _20220212_Analysis1.Lecture ]
-          CurrentLecture = Some 0
+        { CurrentLecture = None
+          Menu = []
         }
 
     let cmd =
-        Cmd.OfAsync.perform api.GetLectures () GotLectures
+        //Cmd.OfAsync.perform api.GetAllLectureMetaData "c:/Users/rene/source/repos/DataScience/ttt" GotAllLectureMetaData
+        Cmd.OfAsync.perform api.GetLecture "c:/Users/rene/source/repos/DataScience/ttt/a.md" GotLecture
 
     model, cmd
 
 let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
     match msg with
-    | GetLectures ->
-        model, Cmd.none
+    | GetLecture path ->
+        model, Cmd.OfAsync.perform api.GetLecture path GotLecture
 
-    | GotLectures _ ->
+    | GotLecture lecture ->
+        { model with CurrentLecture = Some lecture }, Cmd.none
+
+    | GotAllLectureMetaData allLectureMetaData ->
         model, Cmd.none
 
 open Feliz
@@ -46,7 +51,18 @@ open Feliz.Bulma
 
 open Feliz
 open type Feliz.Html
+open Fable.Formatting.Markdown
 
 let view (model: Model) (dispatch: Msg -> unit) =
-    let currentLecture = model.Lectures.[0]()
-    currentLecture
+    match model.CurrentLecture with
+    | Some (lectureMetaData, lectureContent) ->
+        div
+            [ prop.dangerouslySetInnerHTML (lectureContent |> Markdown.Parse |> Markdown.ToHtml)
+            ]
+    | None ->
+        div []
+        
+
+
+
+
