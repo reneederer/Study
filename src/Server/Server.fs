@@ -11,10 +11,10 @@ open System.Text.RegularExpressions
 let getLecture path =
     let content = File.ReadAllText path
     let metaData =
-        Regex.Replace(content, @"^\s*<!--\s*(.*?)\s*-->.*$", "$1").Split("\r\n")
+        Regex.Replace(content, @"^\s*<!--\s*(.*?)\s*-->.*$", "$1", RegexOptions.Singleline).Split("\r\n", StringSplitOptions.RemoveEmptyEntries)
         |> Seq.map (fun x ->
             let a = Regex.Match(x.Trim(), @"^(.*?):(.*?)$", RegexOptions.Multiline)
-            a.Groups.[0].Value.Trim(), a.Groups.[1].Value.Trim())
+            a.Groups.[1].Value.Trim(), a.Groups.[2].Value.Trim())
         |> Map.ofSeq
     { Title = metaData.TryFind "title" |> Option.defaultValue "(No title)"
       Menu =
