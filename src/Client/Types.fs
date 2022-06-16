@@ -1,8 +1,11 @@
 namespace Lectures
+
+open Fable.React
+
 [<AutoOpen>]
 module Types =
 
-type DefaultModel = bool
-
-type DefaultMsg = bool
-
+    type Lecture =
+        { Title : string
+          SubTitles : string * ReactElement
+        }

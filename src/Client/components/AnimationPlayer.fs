@@ -28,24 +28,24 @@ module AnimationPlayer =
             { state with CurrentStep = if state.CurrentStep = 0 then state.Steps.Length - 1 else (state.CurrentStep - 1)}, Cmd.none
 
     [<ReactComponent>]
-    let AnimationPlayer steps =
+    let AnimationPlayer steps (width : int) (height : int) =
         let state, dispatch = React.useElmish((fun () -> init steps), update, [| |])
         Html.div [
             Html.div
-                [ for step in 0..state.CurrentStep do
-                    steps.[step]
+                [ prop.style [ style.width width; style.height height]
+                  prop.children [
+                      for step in 0..state.CurrentStep do
+                        steps.[step]
+                  ]
                 ]
-            Html.br []
-            Html.br []
-            Html.br []
             Html.button [
-                prop.text "Forward"
+                prop.text "<"
+                prop.onClick (fun _ -> dispatch Backward)
+            ]
+            Html.button [
+                prop.text ">"
                 prop.onClick (fun _ -> dispatch Forward)
             ]
 
-            Html.button [
-                prop.text "Backward"
-                prop.onClick (fun _ -> dispatch Backward)
-            ]
         ]
 
