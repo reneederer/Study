@@ -65,6 +65,17 @@ open Fable.Core
 
 let view (model: Model) (dispatch: Msg -> unit) =
     div [
+        div [
+            for x in model.AllLectureMetaData do
+                div [
+                    prop.onClick (fun _ -> dispatch <| GetLecture x.Path)
+                    prop.children [
+                        str (x.Menu |> String.concat " > ")
+                    ]
+                ]
+        ]
+
+
         match model.CurrentLecture with
         | Some (lectureMetaData, lectureContent) ->
             let html = Markdown.ToHtml(lectureContent)
@@ -77,15 +88,6 @@ let view (model: Model) (dispatch: Msg -> unit) =
 
 
 
-        div [
-            for x in model.AllLectureMetaData do
-                div [
-                    prop.onClick (fun _ -> dispatch <| GetLecture x.Path)
-                    prop.children [
-                        str (x.Menu |> String.concat " > ")
-                    ]
-                ]
-        ]
     ]
             
 
